@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision Simulator</title>
+    <style>
+        body {
+            background-color: #F9F6F2;
+            font-family: Garamond, serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .topic-select {
+            position: relative;
+            display: inline-block;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #000000;
+        }
+
+        .topic-option {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            display: none;
+            padding: 10px 0;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .topic-select.active .topic-option {
+            display: block;
+        }
+
+        .topic-option div {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        #knowledge-box {
+            width: 100%;
+            height: 400px;
+            resize: none;
+            padding: 10px;
+            font-family: Garamond, serif;
+            font-size: 18px;
+            color: #000000;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            border: none;
+        }
+
+        .footer {
+            background-color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+            font-family: Helvetica, sans-serif;
+            font-size: 14px;
+            color: #000000;
+            margin-top: auto;
+        }
+
+        .footer span {
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        var mainTimer;
+        var updateTimer;
+
+        function startMainTimer() {
+            var timerElement = document.getElementById("timer");
+            var updateTimerElement = document.getElementById("update-timer");
+            var minutes = 12;
+            var seconds = 0;
+
+            mainTimer = setInterval(function () {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(mainTimer);
+                        document.getElementById("timer").classList.add("hidden");
+                        updateTimerElement.classList.remove("hidden");
+                        startUpdateTimer();
+                        return;
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+
+                timerElement.textContent = minutes + " minutes " + seconds + " seconds remaining...";
+            }, 1000);
+        }
+
+        function startUpdateTimer() {
+            var knowledgeBox = document.getElementById("knowledge-box");
+            var updateTimerElement = document.getElementById("update-timer");
+            var minutes = 18;
+            var seconds = 0;
+
+            updateTimer = setInterval(function () {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(updateTimer);
+                        knowledgeBox.classList.add("completed");
+                        return;
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+
+                updateTimerElement.textContent = minutes + " minutes " + seconds + " seconds remaining...";
+            }, 1000);
+        }
+
+        function disableKnowledgeBox() {
+            var knowledgeBox = document.getElementById("knowledge-box");
+            knowledgeBox.disabled = true;
+        }
+
+        function selectTopic(option) {
+            var selectButton = document.getElementById("topic-select-button");
+            var topicOptions = document.getElementsByClassName("topic-option");
+
+            for (var i = 0; i < topicOptions.length; i++) {
+                topicOptions[i].style.display = "none";
+            }
+
+            selectButton.textContent = option.textContent;
+            selectButton.classList.remove("active");
+            option.style.display = "block";
+        }
+
+        function toggleTopicOptions() {
+            var selectButton = document.getElementById("topic-select-button");
+            var topicOptions = document.getElementsByClassName("topic-option");
+
+            for (var i = 0; i < topicOptions.length; i++) {
+                topicOptions[i].style.display = (selectButton.classList.contains("active")) ? "none" : "block";
+            }
+
+            selectButton.classList.toggle("active");
+        }
+
+        function startTimers() {
+            startMainTimer();
+        }
+    </script>
+</head>
+
+<body onload="startTimers()">
+    <div class="header">
+        <h1>Revision Simulator</h1>
+    </div>
+
+    <div class="container">
+        <div id="timer" class="timer">12 minutes 0 seconds remaining...</div>
+        <div id="update-timer" class="timer hidden">18 minutes 0 seconds remaining...</div>
+
+        <div class="form-group">
+            <div class="topic-select" onclick="toggleTopicOptions()">
+                <span id="topic-select-button">Select Topic</span>
+                <div class="topic-option">
+                    <div onclick="selectTopic(this)">Empire: Relations with Indigenous Peoples</div>
+                    <div onclick="selectTopic(this)">Empire: Imperial and Colonial Policy</div>
+                    <div onclick="selectTopic(this)">Empire: Attitudes to Empire at Home</div>
+                    <div onclick="selectTopic(this)">Empire: The Importance and Influence of Individuals</div>
+                    <div onclick="selectTopic(this)">Empire: Trade and Commerce</div>
+                    <div onclick="selectTopic(this)">Empire: Expansion and Consolidation</div>
+                    <div onclick="selectTopic(this)">China: The Road to War</div>
+                    <div onclick="selectTopic(this)">China: Red Star Rises</div>
+                    <div onclick="selectTopic(this)">China: Tombstones</div>
+                    <div onclick="selectTopic(this)">Government: Constitution</div>
+                    <div onclick="selectTopic(this)">Government: PM and Executive</div>
+                    <div onclick="selectTopic(this)">Government: Parliament</div>
+                    <div onclick="selectTopic(this)">Government: Relations between Branches</div>
+                    <div onclick="selectTopic(this)">Politics: Parties</div>
+                    <div onclick="selectTopic(this)">Politics: Democracy and Participation</div>
+                    <div onclick="selectTopic(this)">Politics: Electoral Systems</div>
+                    <!-- Add more topic options as needed -->
+                </div>
+            </div>
+        </div>
+
+        <textarea id="knowledge-box" placeholder="Write what you recall..." contenteditable></textarea>
+    </div>
+
+    <div class="footer">
+        &copy; 2023 Revision Simulator. All rights reserved. | Created by <span>Oliver F Green</span>
+    </div>
+</body>
+
+</html>
